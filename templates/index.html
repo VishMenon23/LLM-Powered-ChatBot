@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+
+<body>
+    <div class="chatbot-container">
+        <div id="header">
+            <h1 align="center">Data 101 Administrative Assistant</h1>
+            <!-- Vish -->
+            <form action="/logout" method="post" id="logout-form">
+              <button type="submit">Logout</button>
+            </form>
+            <!-- Vish -->
+        </div>
+        <div id="chatbot">
+            <div id="conversation">
+              <!--<div class="chatbot-message">
+                <p class="chatbot-text">I am here to assist students  </p> 
+
+              </div> -->
+              {% for message in messages %}
+                <div class="chatbot-message {{ message.type }}">
+                    <p class="chatbot-text" sentTime="{{ message.sentTime }}">{{ message.text }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            <form id="input-form" method="POST" action="{{ url_for('submit') }}">
+              <!-- Include the hidden input field for user_role -->
+              <input type="hidden" name="user_role" value="{{ user_role }}">
+              <message-container>
+                <input id="input-field" name="input-field" type="text" placeholder="Type your message here" required>
+                <button id="submit-button" type="submit">                </button>
+              </message-container>
+                
+            </form>
+        </div>  
+        {% if user_role == 'teacher' %}
+	<h3>Click the button below to download the current context:</h3>
+        <form action="/download" method="get">
+          <input type="hidden" name="user_role" value="{{ user_role }}">
+          <button type="submit">Download</button>
+        </form>
+    
+        <!-- File upload form -->
+        <h3>Upload the updated Context file:</h3>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="user_role" value="{{ user_role }}"> 
+          <input type="file" name="file">
+          <input type="submit" value="Upload">
+        </form>
+        {% endif %}
+    </div>
+</body>
+</html>
